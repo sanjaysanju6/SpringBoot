@@ -1,5 +1,6 @@
 package com.jpa.springboot.learnjpaandhibernate.course.jdbc;
 
+import com.jpa.springboot.learnjpaandhibernate.course.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -7,15 +8,25 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CourseJdbcRespository {
     @Autowired
-    private JdbcTemplate springJdbcTemplate;
+   private JdbcTemplate springJdbcTemplate;
     private static String INSERT_QUERY =
             """
                insert into course (id,name,author)
-               values(1,'Spring Boot','in28minutes');
-               insert into course (id,name,author)
-               values(2,'Spring ','in28minutes');    
+               values(?,?,?);
+                 
             """;
-    public void insert(){
-        springJdbcTemplate.update(INSERT_QUERY);
+    private static String DELETE_QUERY =
+            """
+               delete from course
+               where id=?
+                 
+            """;
+
+    public void insert(Course course){
+        springJdbcTemplate.update(INSERT_QUERY,
+                course.getId(),course.getName(),course.getAuthor());
+    }
+    public void deleteById(long id){
+        springJdbcTemplate.update(DELETE_QUERY,id);
     }
 }
